@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const d = data; // shorthand
 
         // Priority List: قطع, خاکستری, قرمز, مشکی, صورتی, زرد(رفت), زرد(برگشت), آبی, بنفش, سبز
-        
+        console.log('hi')
         // 1. قطع
         if (d.VBAT_PRESENT_STAT == 0 || d.SDRV_CTRL != 0 || (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && (d.VBUS_PRESENT_STAT == 1) && d.VBAT_PRESENT_STAT == 1 && d.CHG_STAT_2_0 == 7 && d.EN_OTG == 0 && d.VBATOTG_LOW_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_WARM_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && d.TSHUT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)))) {
             console.log("VBAT Path: قطع");
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // 3. قرمز
         else if (((d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBAT_OCP_STAT == 1 || d.TSHUT_STAT == 1) || (d.EN_OTG == 1 && (d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || d.VBATOTG_LOW_STAT == 1))) && d.VBAT_PRESENT_STAT == 1 && d.CHG_STAT_2_0 == 0 && d.SDRV_CTRL == 0) {
             console.log("VBAT Path: قرمز");
-            setPathStyle(pathFromBat, { color: 'var(--error-color)', isAnimated: false, isStatic: true });
+            setPathStyle(pathFromBat, { color: 'var(--error-color)', isAnimated: true, isStatic: false });
         }
         // 4. مشکی
         else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.EN_OTG == 0 && d.VBAT_PRESENT_STAT == 1 && d.VBUS_PRESENT_STAT == 1 && d.VBATOTG_LOW_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_WARM_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && d.TSHUT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VBUS_STAT_3_0 != 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && d.CHG_STAT_2_0 == 0 && d.EN_CHG == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && d.SDRV_CTRL == 0) {
@@ -211,18 +211,22 @@ document.addEventListener('DOMContentLoaded', function() {
             setPathStyle(pathFromBat, { color: 'var(--secondary-color)', isAnimated: true });
         }
         // 6. زرد (رفت)
-        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.VBUS_PRESENT_STAT == 1 && d.VBAT_PRESENT_STAT == 1 && d.EN_OTG == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (d.CHG_STAT_2_0 != 0 && d.CHG_STAT_2_0 != 7) && d.CHG_TMR_STAT == 0 && d.TRICHG_TMR_STAT == 0 && d.PRECHG_TMR_STAT == 0 && d.TS_HOT_STAT == 0 && d.TS_WARM_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && (d.STOP_WD_CHG == 0 || d.WD_STAT == 0) && d.SDRV_CTRL == 0 && (d.VINDPM_STAT == 1 || d.IINDPM_STAT == 1 || d.IBAT_REG_STAT == 1 || d.TREG_STAT == 1)) {
+        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.VBUS_PRESENT_STAT == 1 && d.VBAT_PRESENT_STAT == 1 && d.EN_OTG == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (d.CHG_STAT_2_0 != 0 && d.CHG_STAT_2_0 != 7) && d.CHG_TMR_STAT == 0 && d.TRICHG_TMR_STAT == 0 && d.PRECHG_TMR_STAT == 0 && d.TS_HOT_STAT == 0 && d.TS_WARM_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && (d.STOP_WD_CHG == 0 || d.WD_STAT == 0) && d.SDRV_CTRL == 0 && ((d.VINDPM_STAT == 1 || d.IINDPM_STAT == 1 || d.IBAT_REG_STAT == 1 || d.TREG_STAT == 1) && (d.VSYS_ADC_15_0 > d.VBAT_ADC_15_0))) {
             console.log("VBAT Path: زرد (رفت)");
             setPathStyle(pathToBat, { color: 'var(--warning-color)', isAnimated: true });
         }
         // 7. زرد (برگشت)
-        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.EN_OTG == 1 && d.VBAT_PRESENT_STAT == 1 && d.VBATOTG_LOW_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_WARM_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && d.TSHUT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (d.VINDPM_STAT == 1 || d.IINDPM_STAT == 1 || d.IBAT_REG_STAT == 1 || d.TREG_STAT == 1) && d.CHG_STAT_2_0 == 0 && d.SDRV_CTRL == 0) {
-            console.log("VBAT Path: زرد (برگشت)");
+        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.VBAT_PRESENT_STAT == 1 && ((d.EN_OTG == 1 && d.TS_COLD_STAT == 0 && d.TSHUT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && (d.VINDPM_STAT == 1 || d.IINDPM_STAT == 1 || d.IBAT_REG_STAT == 1 || d.TREG_STAT == 1) && d.CHG_STAT_2_0 == 0) || (d.VBUS_PRESENT_STAT == 1 && d.EN_OTG == 0 && d.TS_HOT_STAT == 0 && ((d.VINDPM_STAT == 1 || d.IINDPM_STAT == 1 || d.IBAT_REG_STAT == 1 || d.TREG_STAT == 1) && (d.VSYS_ADC_15_0 <= d.VBAT_ADC_15_0)))) && d.TS_WARM_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && d.SDRV_CTRL == 0) {
+            if (d.EN_OTG == 1){
+                console.log("VBAT Path: زرد (برگشت) حالت OTG");
+            } else {
+                console.log("VBAT Path: زرد (برگشت) حالت supplement.");
+            };
             setPathStyle(pathFromBat, { color: 'var(--warning-color)', isAnimated: true });
         }
         // 8. آبی (برگشت)
-        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.EN_OTG == 1 && d.VBAT_PRESENT_STAT == 1 && d.VBUS_PRESENT_STAT == 1 && d.VBATOTG_LOW_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_WARM_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && d.TSHUT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VBUS_STAT_3_0 != 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && d.CHG_STAT_2_0 == 0 && d.SDRV_CTRL == 0) {
-            console.log("VBAT Path: آبی");
+        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.EN_OTG == 1 && d.VBAT_PRESENT_STAT == 1 && d.VBUS_PRESENT_STAT == 1 && d.VBATOTG_LOW_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_WARM_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && d.TSHUT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VBUS_STAT_3_0 == 7 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && d.CHG_STAT_2_0 == 0 && d.SDRV_CTRL == 0) {
+            console.log("VBAT Path: آبی در vbat");
             setPathStyle(pathFromBat, { color: 'var(--info-color)', isAnimated: true });
         }
         // 9. بنفش (برگشت)
@@ -234,6 +238,9 @@ document.addEventListener('DOMContentLoaded', function() {
         else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.VBUS_PRESENT_STAT == 1 && d.VBAT_PRESENT_STAT == 1 && d.EN_OTG == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (d.CHG_STAT_2_0 != 0 && d.CHG_STAT_2_0 != 7) && d.CHG_TMR_STAT == 0 && d.TRICHG_TMR_STAT == 0 && d.PRECHG_TMR_STAT == 0 && d.TS_HOT_STAT == 0 && d.TS_WARM_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && (d.STOP_WD_CHG == 0 || d.WD_STAT == 0) && d.SDRV_CTRL == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0) {
             console.log("VBAT Path: سبز");
             setPathStyle(pathToBat, { color: 'var(--success-color)', isAnimated: true });
+        }
+        else {
+            console.log("bad working now.")
         }
     }
 
@@ -278,27 +285,432 @@ document.addEventListener('DOMContentLoaded', function() {
     function mockFetch() {
         // Corrected states to trigger each specific condition
         const states = [
-            // VBUS Path States
-            { name: "VBUS رفت - سبز (Charging Normal)", VBUS_PRESENT_STAT: 1, VBAT_PRESENT_STAT: 1, CHG_STAT_2_0: 3, EN_CHG: 1, IBAT_ADC_15_0: 2000, VBUS_OVP_STAT: 0, VSYS_OVP_STAT: 0, VBAT_OVP_STAT: 0, IBUS_OCP_STAT: 0, PG_STAT: 0, TSHUT_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0, EN_OTG: 0, TS_COLD_STAT: 0, TS_WARM_STAT: 0, EN_HIZ: 0, SDRV_CTRL: 0, VAC_OVP_STAT: 0, VSYS_SHORT_STAT: 0, ACRB1_STAT: 0, ACRB2_STAT: 0, EN_ACDRV1: 0, EN_ACDRV2: 0, CHG_TMR_STAT: 0, TRICHG_TMR_STAT: 0, PRECHG_TMR_STAT: 0, TS_HOT_STAT: 0, VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, IBAT_OCP_STAT: 0, STOP_WD_CHG: 0, WD_STAT: 0, VINDPM_STAT: 0, IINDPM_STAT: 0, IBAT_REG_STAT: 0, TREG_STAT: 0 },
-            { name: "VBUS رفت - زرد (Charging DPM)", VBUS_PRESENT_STAT: 1, VBAT_PRESENT_STAT: 1, CHG_STAT_2_0: 3, EN_CHG: 1, VINDPM_STAT: 1, IBAT_ADC_15_0: 1800, VBUS_OVP_STAT: 0, VSYS_OVP_STAT: 0, VBAT_OVP_STAT: 0, IBUS_OCP_STAT: 0, PG_STAT: 0, TSHUT_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0, EN_OTG: 0, TS_COLD_STAT: 0, TS_WARM_STAT: 0, EN_HIZ: 0, SDRV_CTRL: 0, VAC_OVP_STAT: 0, VSYS_SHORT_STAT: 0, ACRB1_STAT: 0, ACRB2_STAT: 0, EN_ACDRV1: 0, EN_ACDRV2: 0, IINDPM_STAT: 0, IBAT_REG_STAT: 0, TREG_STAT: 0 },
-            { name: "VBUS Path: بنفش (SYS Only, Charge Complete)", VBUS_PRESENT_STAT: 1, VBAT_PRESENT_STAT: 0, CHG_STAT_2_0: 7, VBUS_OVP_STAT: 0, VSYS_OVP_STAT: 0, VBAT_OVP_STAT: 0, IBUS_OCP_STAT: 0, PG_STAT: 0, TSHUT_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0, EN_OTG: 0, TS_COLD_STAT: 0, TS_WARM_STAT: 0, EN_HIZ: 0, SDRV_CTRL: 0, VAC_OVP_STAT: 0, VSYS_SHORT_STAT: 0, ACRB1_STAT: 0, ACRB2_STAT: 0, EN_ACDRV1: 0, EN_ACDRV2: 0, CHG_TMR_STAT: 0, TRICHG_TMR_STAT: 0, PRECHG_TMR_STAT: 0, TS_HOT_STAT: 0, STOP_WD_CHG: 0, WD_STAT: 0, VINDPM_STAT: 0, IINDPM_STAT: 0, IBAT_REG_STAT: 0, TREG_STAT: 0 },
-            { name: "VBUS Path: قرمز (رفت - VBUS OVP Fault)", VBUS_OVP_STAT: 1, IBUS_OCP_STAT: 0, VAC_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0, EN_OTG: 0 },
-            // { name: "VBUS Path: آبی (OTG Normal)", EN_OTG: 1, VBAT_PRESENT_STAT: 1, VBUS_PRESENT_STAT: 1, CHG_STAT_2_0: 0 },
-            // { name: "VBUS Path: زرد (برگشت - OTG DPM)", EN_OTG: 1, VBAT_PRESENT_STAT: 1, VBUS_PRESENT_STAT: 1, VINDPM_STAT: 1, CHG_STAT_2_0: 0 },
-            { name: "VBUS Path: قرمز (برگشت - OTG Fault)", TS_COLD_STAT: 0, TS_WARM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 1, VBATOTG_LOW_STAT: 0, EN_OTG: 1, CHG_STAT_2_0: 0 },
-            // { name: "VBUS Path: صورتی (OTG, ACFETs Off)", EN_OTG: 1, VBAT_PRESENT_STAT: 1, ACRB1_STAT: 1, EN_ACDRV1: 0, CHG_STAT_2_0: 0 },
-            // { name: "VBUS Path: خاکستری (Shared Fault HIZ)", VBUS_PRESENT_STAT: 1, VBAT_PRESENT_STAT: 1, EN_HIZ: 1 },
-            // { name: "VBUS Path: قطع", VBUS_PRESENT_STAT: 0, VBAT_PRESENT_STAT: 1, EN_OTG: 0 },
-            // // VBAT Path States
-            // { name: "VBAT Path: سبز (Charging)", VBUS_PRESENT_STAT: 1, VBAT_PRESENT_STAT: 1, CHG_STAT_2_0: 3, EN_CHG: 1 },
-            // { name: "VBAT Path: زرد (رفت - Charging DPM)", VBUS_PRESENT_STAT: 1, VBAT_PRESENT_STAT: 1, CHG_STAT_2_0: 3, EN_CHG: 1, TREG_STAT: 1 },
-            // { name: "VBAT Path: بنفش (Battery Only)", VBUS_PRESENT_STAT: 0, VBAT_PRESENT_STAT: 1, CHG_STAT_2_0: 0 },
-            // { name: "VBAT Path: قرمز (Battery Fault)", VBAT_PRESENT_STAT: 1, TS_HOT_STAT: 1, CHG_STAT_2_0: 0 },
-            // { name: "VBAT Path: مشکی (Charge Disabled by User)", VBUS_PRESENT_STAT: 1, VBAT_PRESENT_STAT: 1, CHG_STAT_2_0: 0, EN_CHG: 0 },
-            // { name: "VBAT Path: خاکستری (IBAT OCP)", VBAT_PRESENT_STAT: 1, IBAT_OCP_STAT: 1, SFET_PRESENT: 1, EN_BATOCP: 1 },
-            // { name: "VBAT Path: قطع (Charge Complete)", VBUS_PRESENT_STAT: 1, VBAT_PRESENT_STAT: 1, CHG_STAT_2_0: 7 },
-            // { name: "VBAT Path: قطع (No Battery)", VBUS_PRESENT_STAT: 1, VBAT_PRESENT_STAT: 0 },
+            // ---------- updateVbusPath cases (1..10) ----------
+            // VBUS 1. قطع: VBUS=0, AC1=0, AC2=0, EN_OTG=0
+            // {
+            //     name: "VBUS - 1 قطع",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 0,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 0, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBUS 2. قرمز (رفت): یک OVP/OCP و یک منبع حاضر، EN_OTG=0
+            // {
+            //     name: "VBUS - 2 قرمز (رفت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 1, // trigger
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1, // source present
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBUS 3. قرمز (برگشت): EN_OTG=1 و یکی از (TS_COLD/TS_WARM/OTG_OVP/OTG_UVP/VBATOTG_LOW)=1 و CHG_STAT_2_0==0
+            // {
+            //     name: "VBUS - 3 قرمز (برگشت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 1,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 1, OTG_UVP_STAT: 0, // trigger
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 0, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBUS 4. خاکستری (رفت و برگشت): (ACRB both 0 OR EN_ACDRV=1) && SDRV_CTRL==0 && (VBUS_PRESENT || EN_OTG) && one of (VSYS_OVP, VBAT_OVP, PG, TSHUT, EN_HIZ, VSYS_SHORT)==1
+            // {
+            //     name: "VBUS - 4 خاکستری (رفت و برگشت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 1, EN_OTG: 0, // EN_HIZ triggers last clause
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBUS 5. صورتی (برگشت): many negatives, EN_OTG==1, ACRB1 or ACRB2 ==1, EN_ACDRV1/2 ==0, CHG_STAT_2_0==0
+            // {
+            //     name: "VBUS - 5 صورتی (برگشت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 1, ACRB2_STAT: 0, // ACRB1 true
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 1,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 0, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBUS 6. زرد (رفت): negatives, VBUS_PRESENT=1, EN_OTG=0, ACRB both 0 OR EN_ACDRV1==1, and VINDPM_STAT==1 (DPM)
+            // {
+            //     name: "VBUS - 6 زرد (رفت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 1, EN_ACDRV2: 0, // use EN_ACDRV1 to satisfy OR
+            //     EN_BATOCP: 0, EN_CHG: 1, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 1, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0, VSYS_ADC_15_0: 10000, VBAT_ADC_15_0: 110000
+            // },
+
+            // // VBUS 7. زرد (برگشت): like 6 but EN_OTG=1 and CHG_STAT_2_0==0 and DPM flag 1
+            // {
+            //     name: "VBUS - 7 زرد (برگشت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 1, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 1,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 0, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 1, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0,  VSYS_ADC_15_0: 10000, VBAT_ADC_15_0: 9000
+            // },
+
+            // VBUS 7. زرد (برگشت2): like 6 but EN_OTG=0 and DPM flag 1
+            {
+                name: "VBUS - 7 زرد (برگشت2)",
+                AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+                ACRB1_STAT: 0, ACRB2_STAT: 0,
+                CHG_STAT_2_0: 2, CHG_TMR_STAT: 0,
+                EN_ACDRV1: 1, EN_ACDRV2: 0,
+                EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 0,
+                IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+                IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+                PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+                SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+                TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+                TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+                VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+                VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+                VINDPM_STAT: 1, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+                WD_STAT: 0,  VSYS_ADC_15_0: 10000, 
+                VBAT_ADC_15_0: 11000
+                // VBAT_ADC_15_0: 9000
+            },
+
+            // // VBUS 8. بنفش (رفت): negatives, VBUS_PRESENT=1, EN_OTG=0, ACRB both 0 or EN_ACDRV, CHG_STAT_2_0 == 7 (or 0)
+            // {
+            //     name: "VBUS - 8 بنفش (رفت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 7, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 1, // allow AC driver present
+            //     EN_BATOCP: 0, EN_CHG: 1, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 1, VAC_OVP_STAT: 0, // TS_WARM used in purple-inner OR, still okay because purple allows
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBUS 9. سبز (رفت): negatives, VBUS_PRESENT=1, VBAT_PRESENT=1, EN_OTG=0, CHG_STAT_2_0 != 0 && !=7 (e.g., 3)
+            // {
+            //     name: "VBUS - 9 سبز (رفت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 3, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 1, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBUS 10. آبی (برگشت): negatives, EN_OTG=1, CHG_STAT_2_0==0, DPM/IBAT/TREG == 0
+            // {
+            //     name: "VBUS - 10 آبی (برگشت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 1,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 0, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // ---------- updateVbatPath cases (1..10) ----------
+            // // VBAT 1. قطع: VBAT_PRESENT_STAT == 0 triggers first if
+            // {
+            //     name: "VBAT - 1 قطع",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 0, // triggers
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBAT 2. خاکستری: IBAT_OCP_STAT==1 && SFET_PRESENT==1 && EN_BATOCP==1
+            // {
+            //     name: "VBAT - 2 خاکستری",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 1, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 1, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 1, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBAT 3. قرمز: TS_... or VBAT_OVP or IBAT_OCP or TSHUT OR (EN_OTG && OTG_OVP/UVP/VBATOTG_LOW)  && VBAT_PRESENT==1 && CHG_STAT_2_0==0 && SDRV_CTRL==0
+            // {
+            //     name: "VBAT - 3 قرمز",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 1, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1, // present
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBAT 4. مشکی: many negatives, EN_OTG==0, VBAT_PRESENT==1, VBUS_PRESENT==1, VBUS_STAT_3_0 != 0, CHG_STAT_2_0==0, EN_CHG==0, SDRV_CTRL==0
+            // {
+            //     name: "VBAT - 4 مشکی",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 1, // != 0
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBAT 5. صورتی: EN_OTG==1 and ACRB1 or ACRB2 ==1 and EN_ACDRVs==0 and CHG_STAT_2_0==0
+            // {
+            //     name: "VBAT - 5 صورتی",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 1, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 1,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 0, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBAT 6. زرد (رفت): VBUS_PRESENT=1 && VBAT_PRESENT=1 && EN_OTG=0 && CHG_STAT_2_0 != 0 && some DPM/IBAT_REG/TREG==1
+            // {
+            //     name: "VBAT - 6 زرد (رفت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 3, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 1, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 1, IBUS_OCP_STAT: 0, // IBAT_REG triggers group
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBAT 7. زرد (برگشت): EN_OTG=1 && VBAT_PRESENT=1 && DPM flag OR IBAT_REG==1 && CHG_STAT_2_0==0
+            // {
+            //     name: "VBAT - 7 زرد (برگشت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 1,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 0, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 1, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0, // DPM present
+            //     WD_STAT: 0
+            // },
+
+            // // VBAT 8. آبی (برگشت): many negatives && EN_OTG==1 && VBAT_PRESENT==1 && VBUS_PRESENT==1 && VBUS_STAT_3_0==7 && CHG_STAT_2_0==0
+            // {
+            //     name: "VBAT - 8 آبی (برگشت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 1,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 7, // requires 7
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBAT 9. بنفش (برگشت): (VBUS_PRESENT == 0 OR some alarm) && CHG_STAT_2_0==0 && SDRV_CTRL==0 && VBAT_PRESENT==1
+            // {
+            //     name: "VBAT - 9 بنفش (برگشت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 0, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 0, // VBUS_PRESENT=0 makes the OR true
+            //     VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // },
+
+            // // VBAT 10. سبز (رفت): negatives, VBUS_PRESENT=1, VBAT_PRESENT=1, EN_OTG=0, CHG_STAT_2_0 !=0 && !=7 (charging)
+            // {
+            //     name: "VBAT - 10 سبز (رفت)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 5, CHG_TMR_STAT: 0, // some charging state not 0 or 7
+            //     EN_ACDRV1: 0, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 1, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, TS_WARM_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0
+            // }
         ];
+
         
         const allKeys = new Set();
         states.forEach(state => Object.keys(state).forEach(key => allKeys.add(key)));
