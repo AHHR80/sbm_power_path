@@ -1,0 +1,113 @@
+/* --- متغیرهای اصلی برای تم --- */
+:root {
+    --bg-color: #1a1a2e;
+    --card-bg-color: #16213e;
+    --primary-color: #0f3460;
+    --secondary-color: #e94560;
+    --font-color: #e0e0e0;
+    --font-color-label: #a0a0c0;
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --error-color: #c0392b;
+    --info-color: #3498db;
+    --idle-color: #555;
+}
+
+/* --- استایل‌های پایه --- */
+body {
+    font-family: 'Vazirmatn', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--font-color);
+}
+
+/* --- استایل‌های شماتیک --- */
+.schematic-bg {
+    background-image: radial-gradient(var(--card-bg-color) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.component {
+    transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
+    cursor: default; /* Changed from pointer to default */
+}
+
+.component text {
+    pointer-events: none;
+    user-select: none;
+}
+
+.component-bg {
+    fill: var(--card-bg-color);
+    transition: fill 0.3s;
+}
+.component-stroke-info { stroke: var(--info-color); stroke-width: 2; }
+.component-stroke-secondary { stroke: var(--secondary-color); stroke-width: 2; transition: stroke 0.3s; }
+.component-stroke-success { stroke: var(--success-color); stroke-width: 2; }
+.component-stroke-warning { stroke: var(--warning-color); stroke-width: 2; }
+
+.data-text {
+    font-size: 18px;
+    font-weight: 700;
+    fill: white;
+    transition: fill 0.3s;
+}
+
+.label-text {
+    font-size: 14px;
+    fill: var(--font-color-label);
+}
+
+/* --- انیمیشن مسیر جریان --- */
+.power-path {
+    stroke-width: 4;
+    fill: none;
+    stroke-dasharray: 15;
+    stroke-dashoffset: 30;
+    opacity: 0;
+    transition: opacity 0.5s, stroke 0.5s, stroke-dasharray 0.5s;
+}
+
+.power-path.flow-active {
+    opacity: 1;
+    animation: march 2s linear infinite;
+}
+
+.power-path.flow-otg {
+    animation-direction: reverse;
+}
+
+.power-path.hiz-mode {
+    stroke-dasharray: 5 10;
+    stroke: #555;
+    opacity: 0.8;
+}
+
+@keyframes march {
+    to { stroke-dashoffset: 0; }
+}
+
+/* --- آیکون‌های وضعیت --- */
+.fault-icon {
+    animation: blink-warning 1s infinite;
+}
+
+@keyframes blink-warning {
+    50% { opacity: 0.5; }
+}
+
+/* --- پنل وضعیت کلی --- */
+#overall-status-indicator {
+    transition: background-color 0.3s;
+}
+.status-bg-error { background-color: var(--error-color); color: white; }
+.status-bg-warning { background-color: var(--warning-color); color: #1a1a2e; }
+.status-bg-success { background-color: var(--success-color); color: white; }
+.status-bg-info { background-color: var(--info-color); color: white; }
+.status-bg-idle { background-color: var(--idle-color); color: white; }
+
+
+/* --- استایل پنل وضعیت --- */
+.status-panel-card {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}

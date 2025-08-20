@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد شماتیک BQ25672</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="overflow-hidden">
+    <!-- Main container for the application -->
+    <div class="relative w-screen h-screen">
+        <!-- Main Schematic View -->
+        <main class="w-full h-full flex flex-col items-center justify-center schematic-bg p-4">
+            
+            <!-- Overall Status Display -->
+            <div id="overall-status-container" class="mb-4 p-3 rounded-lg flex items-center justify-center space-x-3 space-x-reverse text-lg md:text-xl font-bold transition-all duration-300">
+                <div id="overall-status-indicator" class="w-4 h-4 rounded-full"></div>
+                <span id="overall-status-text">--</span>
+            </div>
+
+            <!-- SVG Schematic Diagram -->
+            <svg id="schematic-diagram" viewBox="0 0 800 400" class="w-full max-w-4xl h-auto">
+                <!-- Power Paths -->
+                <path id="path-vbus-to-chip" class="power-path" d="M 100 150 H 320" />
+                <path id="path-chip-to-sys" class="power-path" d="M 480 150 H 700" />
+                <path id="path-chip-to-bat" class="power-path" d="M 400 200 V 280" />
+                <path id="path-bat-to-chip" class="power-path" d="M 400 280 V 200" />
+
+                <!-- VBUS Component -->
+                <g id="vbus-component" class="component">
+                    <rect x="20" y="125" width="80" height="50" rx="10" class="component-bg component-stroke-info"/>
+                    <text x="60" y="145" text-anchor="middle" class="label-text">VBUS</text>
+                    <text id="vbus-voltage-text" x="60" y="170" text-anchor="middle" class="data-text">-- V</text>
+                </g>
+
+                <!-- BQ25672 Chip -->
+                <g id="chip-component" class="component">
+                    <rect id="chip-rect" x="320" y="100" width="160" height="100" rx="10" class="component-bg component-stroke-secondary"/>
+                    <text x="400" y="140" text-anchor="middle" class="data-text">BQ25672</text>
+                    <text id="chip-temp-text" x="400" y="170" text-anchor="middle" class="label-text">-- °C</text>
+                    <text id="charge-status-text" x="400" y="190" text-anchor="middle" class="label-text">درحال شارژ نیست</text>
+                    <g id="fault-indicator" class="fault-icon" style="visibility: hidden;">
+                        <circle cx="465" cy="115" r="12" fill="var(--error-color)"/>
+                        <text x="465" y="120" text-anchor="middle" fill="white" font-size="18" font-weight="bold">!</text>
+                    </g>
+                </g>
+
+                <!-- Battery Component -->
+                <g id="battery-component" class="component">
+                    <rect id="battery-rect" x="360" y="280" width="80" height="100" rx="10" class="component-bg component-stroke-success"/>
+                    <rect id="battery-cap" x="385" y="270" width="30" height="10" rx="3" class="component-bg component-stroke-success"/>
+                    <text x="400" y="320" text-anchor="middle" class="label-text">BAT</text>
+                    <text id="battery-voltage-text" x="400" y="345" text-anchor="middle" class="data-text">-- V</text>
+                    <text id="battery-current-text" x="400" y="370" text-anchor="middle" class="label-text">-- A</text>
+                    <g id="temp-indicator" style="visibility: hidden;">
+                        <path d="M430 360 Q 445 340 430 320" stroke="white" stroke-width="2" fill="none" />
+                        <circle id="temp-indicator-circle" cx="430" cy="365" r="5" fill="white" />
+                    </g>
+                </g>
+
+                <!-- SYS Load Component -->
+                <g id="sys-component" class="component">
+                    <rect x="700" y="125" width="80" height="50" rx="10" class="component-bg component-stroke-warning"/>
+                    <text x="740" y="145" text-anchor="middle" class="label-text">SYS</text>
+                    <text id="sys-voltage-text" x="740" y="170" text-anchor="middle" class="data-text">-- V</text>
+                </g>
+            </svg>
+            
+            <!-- Bottom Status Panel -->
+            <div class="absolute bottom-4 left-4 right-4 mx-auto max-w-4xl p-2 rounded-xl bg-black/20 status-panel-card border border-gray-700">
+                <div id="status-grid" class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 text-center">
+                    <div class="p-2">
+                        <p class="text-xs md:text-sm text-gray-400">وضعیت شارژ</p>
+                        <p id="status-charge" class="text-base md:text-lg font-bold">--</p>
+                    </div>
+                    <div class="p-2">
+                        <p class="text-xs md:text-sm text-gray-400">نوع آداپتور</p>
+                        <p id="status-adapter" class="text-base md:text-lg font-bold">--</p>
+                    </div>
+                    <div class="p-2">
+                        <p class="text-xs md:text-sm text-gray-400">جریان ورودی</p>
+                        <p id="status-ibus" class="text-base md:text-lg font-bold">-- mA</p>
+                    </div>
+                    <div class="p-2">
+                        <p class="text-xs md:text-sm text-gray-400">وضعیت سیستم</p>
+                        <p id="status-sys" class="text-base md:text-lg font-bold">--</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
