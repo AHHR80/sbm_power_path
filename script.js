@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setPathStyle(pathFromBat, { color: 'var(--idle-color)', isAnimated: false, isStatic: true });
         }
         // 3. قرمز
-        else if (((d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBAT_OCP_STAT == 1) && d.VBAT_PRESENT_STAT == 1 && d.CHG_STAT_2_0 == 0 && d.SDRV_CTRL == 0) {
+        else if (((d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBAT_OCP_STAT == 1)) && d.VBAT_PRESENT_STAT == 1 && d.CHG_STAT_2_0 == 0 && d.SDRV_CTRL == 0) {
             console.log("VBAT Path: قرمز");
             setPathStyle(pathFromBat, { color: 'var(--error-color)', isAnimated: true, isStatic: false });
         }
