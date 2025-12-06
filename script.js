@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setPathStyle(path, { color: 'var(--error-color)', isAnimated: true });
         }
         // 3. قرمز (برگشت)
-        else if ((d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || d.VBATOTG_LOW_STAT == 1) && d.EN_OTG == 1 && d.CHG_STAT_2_0 == 0) {
+        else if ((d.TS_COLD_STAT == 1 || d.TS_WARM_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || d.VBATOTG_LOW_STAT == 1 || VBUS_OVP_STAT == 1 || IBUS_OCP_STAT == 1 || VAC_OVP_STAT == 1) && d.EN_OTG == 1 && d.CHG_STAT_2_0 == 0) {
             console.log("VBUS Path: قرمز (برگشت)");
             setPathStyle(path, { color: 'var(--error-color)', isAnimated: true, isReversed: true });
         }
