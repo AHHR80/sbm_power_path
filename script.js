@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resetVisuals();
         updateVbusPath(data);
         updateVbatPath(data);
+        updateSysPath(data); // تابع جدید برای مسیر SYS
         updateVbusIcon(data);
         updateVbatIcon(data);
         
@@ -95,6 +96,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function setPathStyle(path, { color, isAnimated, isReversed = false, isStatic = false }) {
         path.style.stroke = color;
         path.style.opacity = '1';
+        // Reset classes
+        path.classList.remove('flow-active', 'flow-otg', 'hiz-mode');
+        
         if (isAnimated) {
             path.classList.add('flow-active');
             if (isReversed) path.classList.add('flow-otg');
@@ -105,7 +109,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function resetVisuals() {
-        const paths = [UIElements.pathVbusToChip, UIElements.pathChipToBat, UIElements.pathBatToChip];
+        // اضافه کردن pathChipToSys به لیست ریست
+        const paths = [UIElements.pathVbusToChip, UIElements.pathChipToSys, UIElements.pathChipToBat, UIElements.pathBatToChip];
         paths.forEach(p => {
             p.className.baseVal = 'power-path';
             p.style.stroke = 'transparent';
@@ -120,6 +125,30 @@ document.addEventListener('DOMContentLoaded', function() {
         UIElements.faultIndicator.style.visibility = 'hidden';
         UIElements.tempIndicator.style.visibility = 'hidden';
         UIElements.batteryComponent.style.opacity = '1';
+    }
+
+    // --- تابع جدید برای مسیر SYS ---
+    function updateSysPath(data) {
+        const path = UIElements.pathChipToSys;
+        
+        // اطمینان از وجود مقادیر برای جلوگیری از خطا
+        const vbat = data.VBAT_ADC_15_0 || 0;
+        const vsys = data.VSYS_ADC_15_0 || 0;
+
+        // اگر سیستم کاملاً خاموش است (هر دو ولتاژ صفر یا بسیار کم)، چیزی رسم نکن
+        if (vbat < 100 && vsys < 100) return;
+
+        if (vbat > vsys) {
+            // حالت 1: ولتاژ باتری بیشتر است -> مصرف از باتری
+            // رنگ: نارنجی، جهت: به سمت SYS (پیش‌فرض)
+            console.log("SYS Path: تغذیه از باتری (نارنجی)");
+            setPathStyle(path, { color: 'orange', isAnimated: true, isReversed: false });
+        } else {
+            // حالت 2: ولتاژ باتری کمتر است (آداپتور وصل است) -> مصرف از آداپتور
+            // رنگ: سبز، جهت: به سمت SYS (پیش‌فرض)
+            console.log("SYS Path: تغذیه از آداپتور (سبز)");
+            setPathStyle(path, { color: 'var(--success-color)', isAnimated: true, isReversed: false });
+        }
     }
 
     function updateVbusPath(data) {
@@ -138,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setPathStyle(path, { color: 'var(--error-color)', isAnimated: true });
         }
         // 3. قرمز (برگشت)
-        else if ((d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || d.VBATOTG_LOW_STAT == 1 || VBUS_OVP_STAT == 1 || IBUS_OCP_STAT == 1 || VAC_OVP_STAT == 1) && d.EN_OTG == 1 && d.CHG_STAT_2_0 == 0) {
+        else if ((d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || d.VBATOTG_LOW_STAT == 1 || d.VBUS_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.VAC_OVP_STAT == 1) && d.EN_OTG == 1 && d.CHG_STAT_2_0 == 0) {
             console.log("VBUS Path: قرمز (برگشت)");
             setPathStyle(path, { color: 'var(--error-color)', isAnimated: true, isReversed: true });
         }
@@ -158,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setPathStyle(path, { color: 'var(--warning-color)', isAnimated: true });
         }
         // 7. زرد (برگشت)
-        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.EN_OTG == 1 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && d.CHG_STAT_2_0 == 0 && (d.VINDPM_STAT == 1 || d.IINDPM_STAT == 1 || d.IBAT_REG_STAT == 1 || d.TREG_STAT == 1) && VBUS_STAT == 7) {
+        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.EN_OTG == 1 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && d.CHG_STAT_2_0 == 0 && (d.VINDPM_STAT == 1 || d.IINDPM_STAT == 1 || d.IBAT_REG_STAT == 1 || d.TREG_STAT == 1) && d.VBUS_STAT_3_0 == 7) {
             console.log("VBUS Path: زرد (برگشت)");
             setPathStyle(path, { color: 'var(--warning-color)', isAnimated: true, isReversed: true });
         }
@@ -168,12 +197,12 @@ document.addEventListener('DOMContentLoaded', function() {
             setPathStyle(path, { color: '#a855f7', isAnimated: true });
         }
         // 9. سبز (رفت)
-        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.VBUS_PRESENT_STAT == 1 && d.VBAT_PRESENT_STAT == 1 && d.EN_OTG == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (d.CHG_STAT_2_0 != 0 && d.CHG_STAT_2_0 != 7) && d.CHG_TMR_STAT == 0 && d.TRICHG_TMR_STAT == 0 && d.PRECHG_TMR_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && (d.STOP_WD_CHG == 0 || d.WD_STAT == 0) && d.SDRV_CTRL == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && (TS_WARM_STAT == 0 || (JEITA_VSET_2 != 0 && JEITA_ISETH_1 != 0)) && (TS_COOL_STAT == 0 || (JEITA_ISETC_1 != 0))) {
+        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.VBUS_PRESENT_STAT == 1 && d.VBAT_PRESENT_STAT == 1 && d.EN_OTG == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (d.CHG_STAT_2_0 != 0 && d.CHG_STAT_2_0 != 7) && d.CHG_TMR_STAT == 0 && d.TRICHG_TMR_STAT == 0 && d.PRECHG_TMR_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && (d.STOP_WD_CHG == 0 || d.WD_STAT == 0) && d.SDRV_CTRL == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && (d.TS_WARM_STAT == 0 || (d.JEITA_VSET_2 != 0 && d.JEITA_ISETH_1 != 0)) && (d.TS_COOL_STAT == 0 || (d.JEITA_ISETC_1 != 0))) {
             console.log("VBUS Path: سبز (رفت)");
             setPathStyle(path, { color: 'var(--success-color)', isAnimated: true });
         }
         // 10. آبی (برگشت)
-        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.EN_OTG == 1 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && d.CHG_STAT_2_0 == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && VBUS_STAT == 7) {
+        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.EN_OTG == 1 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && d.CHG_STAT_2_0 == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && d.VBUS_STAT_3_0 == 7) {
             console.log("VBUS Path: آبی (برگشت)");
             setPathStyle(path, { color: 'var(--info-color)', isAnimated: true, isReversed: true });
         }
@@ -185,9 +214,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const d = data; // shorthand
 
         // Priority List: قطع, خاکستری, قرمز, مشکی, صورتی, زرد(رفت), زرد(برگشت), آبی, بنفش, سبز
-        console.log('hi')
+        
         // 1. قطع
-        if (d.VBAT_PRESENT_STAT == 0 || d.SDRV_CTRL != 0 || (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && (d.VBUS_PRESENT_STAT == 1) && d.VBAT_PRESENT_STAT == 1 && d.CHG_STAT_2_0 == 7 && d.EN_OTG == 0 && d.VBATOTG_LOW_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && d.TSHUT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (TS_WARM_STAT == 0 || (JEITA_VSET_2 != 0 && JEITA_ISETH_1 != 0)) && (TS_COOL_STAT == 0 || (JEITA_ISETC_1 != 0)))) {
+        if (d.VBAT_PRESENT_STAT == 0 || d.SDRV_CTRL != 0 || (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && (d.VBUS_PRESENT_STAT == 1) && d.VBAT_PRESENT_STAT == 1 && d.CHG_STAT_2_0 == 7 && d.EN_OTG == 0 && d.VBATOTG_LOW_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && d.TSHUT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (d.TS_WARM_STAT == 0 || (d.JEITA_VSET_2 != 0 && d.JEITA_ISETH_1 != 0)) && (d.TS_COOL_STAT == 0 || (d.JEITA_ISETC_1 != 0)))) {
             console.log("VBAT Path: قطع");
         }
         // 2. خاکستری
@@ -211,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setPathStyle(pathFromBat, { color: 'var(--secondary-color)', isAnimated: true });
         }
         // 6. زرد (رفت)
-        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.VBUS_PRESENT_STAT == 1 && d.VBAT_PRESENT_STAT == 1 && d.EN_OTG == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (d.CHG_STAT_2_0 != 0 && d.CHG_STAT_2_0 != 7) && d.CHG_TMR_STAT == 0 && d.TRICHG_TMR_STAT == 0 && d.PRECHG_TMR_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && (d.STOP_WD_CHG == 0 || d.WD_STAT == 0) && d.SDRV_CTRL == 0 && ((d.VINDPM_STAT == 1 || d.IINDPM_STAT == 1 || d.IBAT_REG_STAT == 1 || d.TREG_STAT == 1) && (d.VSYS_ADC_15_0 > d.VBAT_ADC_15_0)) && (TS_WARM_STAT == 0 || (JEITA_VSET_2 != 0 && JEITA_ISETH_1 != 0)) && (TS_COOL_STAT == 0 || (JEITA_ISETC_1 != 0))) {
+        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.VBUS_PRESENT_STAT == 1 && d.VBAT_PRESENT_STAT == 1 && d.EN_OTG == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (d.CHG_STAT_2_0 != 0 && d.CHG_STAT_2_0 != 7) && d.CHG_TMR_STAT == 0 && d.TRICHG_TMR_STAT == 0 && d.PRECHG_TMR_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && (d.STOP_WD_CHG == 0 || d.WD_STAT == 0) && d.SDRV_CTRL == 0 && ((d.VINDPM_STAT == 1 || d.IINDPM_STAT == 1 || d.IBAT_REG_STAT == 1 || d.TREG_STAT == 1) && (d.VSYS_ADC_15_0 > d.VBAT_ADC_15_0)) && (d.TS_WARM_STAT == 0 || (d.JEITA_VSET_2 != 0 && d.JEITA_ISETH_1 != 0)) && (d.TS_COOL_STAT == 0 || (d.JEITA_ISETC_1 != 0))) {
             console.log("VBAT Path: زرد (رفت)");
             setPathStyle(pathToBat, { color: 'var(--warning-color)', isAnimated: true });
         }
@@ -230,12 +259,12 @@ document.addEventListener('DOMContentLoaded', function() {
             setPathStyle(pathFromBat, { color: 'var(--info-color)', isAnimated: true });
         }
         // 9. بنفش (برگشت)
-        else if ((d.VBUS_PRESENT_STAT == 0 || (d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || d.EN_HIZ == 1 || VBATOTG_LOW_STAT == 1 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1)) && d.CHG_STAT_2_0 == 0 && d.SDRV_CTRL == 0 && d.VBATOTG_LOW_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && (d.EN_OTG == 0 || ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1))) && d.VBAT_PRESENT_STAT == 1) {
+        else if ((d.VBUS_PRESENT_STAT == 0 || (d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || d.EN_HIZ == 1 || d.VBATOTG_LOW_STAT == 1 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1)) && d.CHG_STAT_2_0 == 0 && d.SDRV_CTRL == 0 && d.VBATOTG_LOW_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && (d.EN_OTG == 0 || ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1))) && d.VBAT_PRESENT_STAT == 1) {
             console.log("VBAT Path: بنفش");
             setPathStyle(pathFromBat, { color: '#a855f7', isAnimated: true });
         }
         // 10. سبز (رفت)
-        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.VBUS_PRESENT_STAT == 1 && d.VBAT_PRESENT_STAT == 1 && d.EN_OTG == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (d.CHG_STAT_2_0 != 0 && d.CHG_STAT_2_0 != 7) && d.CHG_TMR_STAT == 0 && d.TRICHG_TMR_STAT == 0 && d.PRECHG_TMR_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && (d.STOP_WD_CHG == 0 || d.WD_STAT == 0) && d.SDRV_CTRL == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && (TS_WARM_STAT == 0 || (JEITA_VSET_2 != 0 && JEITA_ISETH_1 != 0)) && (TS_COOL_STAT == 0 || (JEITA_ISETC_1 != 0))) {
+        else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && d.VBUS_PRESENT_STAT == 1 && d.VBAT_PRESENT_STAT == 1 && d.EN_OTG == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && (d.CHG_STAT_2_0 != 0 && d.CHG_STAT_2_0 != 7) && d.CHG_TMR_STAT == 0 && d.TRICHG_TMR_STAT == 0 && d.PRECHG_TMR_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBATOTG_LOW_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && (d.STOP_WD_CHG == 0 || d.WD_STAT == 0) && d.SDRV_CTRL == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && (d.TS_WARM_STAT == 0 || (d.JEITA_VSET_2 != 0 && d.JEITA_ISETH_1 != 0)) && (d.TS_COOL_STAT == 0 || (d.JEITA_ISETC_1 != 0))) {
             console.log("VBAT Path: سبز");
             setPathStyle(pathToBat, { color: 'var(--success-color)', isAnimated: true });
         }
@@ -272,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (((d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBAT_OCP_STAT == 1 || d.TSHUT_STAT == 1) || (d.EN_OTG == 1 && (d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || d.VBATOTG_LOW_STAT == 1)) || d.CHG_TMR_STAT == 1 || d.PRECHG_TMR_STAT == 1 || d.TRICHG_TMR_STAT == 1) && d.VBAT_PRESENT_STAT == 1 && d.SDRV_CTRL == 0) {
             console.log("VBAT Icon: قرمز");
             setBatteryStroke('var(--error-color)');
-        } else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && (d.VBUS_PRESENT_STAT == 1) && d.VBAT_PRESENT_STAT == 1 && d.CHG_STAT_2_0 == 7 && d.EN_OTG == 0 && d.VBATOTG_LOW_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && d.TSHUT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && d.SDRV_CTRL == 0 && (TS_WARM_STAT == 0 || (JEITA_VSET_2 != 0 && JEITA_ISETH_1 != 0)) && (TS_COOL_STAT == 0 || (JEITA_ISETC_1 != 0))) {
+        } else if (!(d.VBUS_OVP_STAT == 1 || d.VSYS_OVP_STAT == 1 || d.VBAT_OVP_STAT == 1 || d.IBUS_OCP_STAT == 1 || d.PG_STAT == 1 || d.TSHUT_STAT == 1 || d.OTG_OVP_STAT == 1 || d.OTG_UVP_STAT == 1 || (d.EN_OTG == 1 && (d.TS_COLD_STAT == 1 || d.TS_HOT_STAT == 1)) || d.EN_HIZ == 1 || d.SDRV_CTRL != 0 || d.VAC_OVP_STAT == 1 || d.VSYS_SHORT_STAT == 1) && (d.VBUS_PRESENT_STAT == 1) && d.VBAT_PRESENT_STAT == 1 && d.CHG_STAT_2_0 == 7 && d.EN_OTG == 0 && d.VBATOTG_LOW_STAT == 0 && d.TS_COLD_STAT == 0 && d.TS_HOT_STAT == 0 && d.VBAT_OVP_STAT == 0 && d.IBAT_OCP_STAT == 0 && d.TSHUT_STAT == 0 && d.OTG_OVP_STAT == 0 && d.OTG_UVP_STAT == 0 && d.VINDPM_STAT == 0 && d.IINDPM_STAT == 0 && d.IBAT_REG_STAT == 0 && d.TREG_STAT == 0 && ((d.ACRB1_STAT == 0 && d.ACRB2_STAT == 0) || (d.EN_ACDRV1 == 1 || d.EN_ACDRV2 == 1)) && d.SDRV_CTRL == 0 && (d.TS_WARM_STAT == 0 || (d.JEITA_VSET_2 != 0 && d.JEITA_ISETH_1 != 0)) && (d.TS_COOL_STAT == 0 || (d.JEITA_ISETC_1 != 0))) {
             console.log("VBAT Icon: سبز (شارژ کامل)");
             setBatteryStroke('var(--success-color)');
         } else {
@@ -426,27 +455,27 @@ document.addEventListener('DOMContentLoaded', function() {
             //     WD_STAT: 0,  VSYS_ADC_15_0: 10000, VBAT_ADC_15_0: 9000
             // },
 
-            // VBUS 7. زرد (برگشت2): like 6 but EN_OTG=0 and DPM flag 1
-            {
-                name: "VBUS - 7 زرد (برگشت2)",
-                AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
-                ACRB1_STAT: 0, ACRB2_STAT: 0,
-                CHG_STAT_2_0: 2, CHG_TMR_STAT: 0,
-                EN_ACDRV1: 1, EN_ACDRV2: 0,
-                EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 0,
-                IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
-                IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
-                PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
-                SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
-                TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
-                TS_COLD_STAT: 0, TS_HOT_STAT: 0, VAC_OVP_STAT: 0,
-                VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
-                VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
-                VINDPM_STAT: 1, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
-                WD_STAT: 0,  VSYS_ADC_15_0: 10000, 
-                VBAT_ADC_15_0: 11000
-                // VBAT_ADC_15_0: 9000
-            },
+            // // VBUS 7. زرد (برگشت2): like 6 but EN_OTG=0 and DPM flag 1
+            // {
+            //     name: "VBUS - 7 زرد (برگشت2)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 2, CHG_TMR_STAT: 0,
+            //     EN_ACDRV1: 1, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_COLD_STAT: 0, TS_HOT_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1,
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
+            //     VINDPM_STAT: 1, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0,  VSYS_ADC_15_0: 10000, 
+            //     VBAT_ADC_15_0: 11000
+            //     // VBAT_ADC_15_0: 9000
+            // },
 
             // // VBUS 8. بنفش (رفت): negatives, VBUS_PRESENT=1, EN_OTG=0, ACRB both 0 or EN_ACDRV, CHG_STAT_2_0 == 7 (or 0)
             // {
@@ -708,6 +737,50 @@ document.addEventListener('DOMContentLoaded', function() {
             //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 0,
             //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
             //     WD_STAT: 0
+            // }
+            
+            // مثال 1: آداپتور نیست، ولتاژ باتری بیشتر از Sys (مسیر نارنجی به سمت Sys)
+            {
+                name: "مثال 1: بدون آداپتور، باتری > Sys (مسیر نارنجی)",
+                AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+                ACRB1_STAT: 0, ACRB2_STAT: 0,
+                CHG_STAT_2_0: 0, // شارژ نمی‌شود
+                EN_ACDRV1: 0, EN_ACDRV2: 0,
+                EN_BATOCP: 0, EN_CHG: 0, EN_HIZ: 0, EN_OTG: 0,
+                IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+                IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+                PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+                SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+                TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+                TS_HOT_STAT: 0, VAC_OVP_STAT: 0,
+                VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1, // باتری وصل است
+                VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 0, VBUS_STAT_3_0: 0, // آداپتور نیست
+                VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+                WD_STAT: 0,
+                VSYS_ADC_15_0: 3800, // ولتاژ سیستم کمتر
+                VBAT_ADC_15_0: 4200  // ولتاژ باتری بیشتر
+            },
+
+            // // مثال 2: آداپتور هست، در حال شارژ، ولتاژ Sys بیشتر از باتری (مسیر سبز به سمت Sys)
+            // {
+            //     name: "مثال 2: شارژ با آداپتور، Sys > باتری (مسیر سبز)",
+            //     AC1_PRESENT_STAT: 0, AC2_PRESENT_STAT: 0,
+            //     ACRB1_STAT: 0, ACRB2_STAT: 0,
+            //     CHG_STAT_2_0: 3, // در حال شارژ سریع
+            //     EN_ACDRV1: 1, EN_ACDRV2: 0,
+            //     EN_BATOCP: 0, EN_CHG: 1, EN_HIZ: 0, EN_OTG: 0,
+            //     IBAT_OCP_STAT: 0, IBAT_REG_STAT: 0, IBUS_OCP_STAT: 0,
+            //     IINDPM_STAT: 0, OTG_OVP_STAT: 0, OTG_UVP_STAT: 0,
+            //     PG_STAT: 0, PRECHG_TMR_STAT: 0, SDRV_CTRL: 0,
+            //     SFET_PRESENT: 0, STOP_WD_CHG: 0, TREG_STAT: 0,
+            //     TRICHG_TMR_STAT: 0, TSHUT_STAT: 0, TS_COLD_STAT: 0,
+            //     TS_HOT_STAT: 0, VAC_OVP_STAT: 0,
+            //     VBATOTG_LOW_STAT: 0, VBAT_OVP_STAT: 0, VBAT_PRESENT_STAT: 1, // باتری وصل
+            //     VBUS_OVP_STAT: 0, VBUS_PRESENT_STAT: 1, VBUS_STAT_3_0: 3, // آداپتور وصل (DCP)
+            //     VINDPM_STAT: 0, VSYS_OVP_STAT: 0, VSYS_SHORT_STAT: 0,
+            //     WD_STAT: 0,
+            //     VSYS_ADC_15_0: 4400, // ولتاژ سیستم بیشتر
+            //     VBAT_ADC_15_0: 3900  // ولتاژ باتری کمتر
             // }
         ];
 
